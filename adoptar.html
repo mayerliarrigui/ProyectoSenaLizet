@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="adoptame.css">
+</head>
+<body>
+
+<h1>Listado de Mascotas</h1>
+
+<table id="customers">
+  <tr>
+    <th>Nombre</th>
+    <th>Edad</th>
+    <th>Raza</th>
+    <th>Adoptar</th>
+  </tr>
+</table>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $.ajax({
+      url: 'obtener_mascotas.php',
+      type: 'GET',
+      success: function(response) {
+        var mascotas = JSON.parse(response);
+        var table = $('#customers');
+
+        for (var i = 0; i < mascotas.length; i++) {
+          var mascota = mascotas[i];
+          var row = $('<tr>');
+          row.append($('<td>').text(mascota.nombre));
+          row.append($('<td>').text(mascota.edad));
+          row.append($('<td>').text(mascota.raza));
+
+          var adoptarBtn = $('<button>').text('Adoptar');
+          adoptarBtn.data('idMascota', mascota.idMascota);
+          adoptarBtn.click(adopcionMascota);
+          row.append($('<td>').append(adoptarBtn));
+
+          table.append(row);
+        }
+      },
+      error: function(xhr, status, error) {
+        console.log(xhr.responseText);
+      }
+    });
+
+    function adopcionMascota() {
+      var idMascota = $(this).data('idMascota');
+      var correo = localStorage.getItem('correo');
+
+      $.ajax({
+        url: 'adoptar.php',
+        type: 'POST',
+        data: {
+          idMascota: idMascota,
+          correo: correo
+        },
+        success: function(response) {
+          console.log(response);
+          // Aquí puedes realizar acciones adicionales después de adoptar la mascota
+        },
+        error: function(xhr, status, error) {
+          console.log(xhr.responseText);
+        }
+      });
+    }
+  });
+</script>
+
+</body>
+</html>

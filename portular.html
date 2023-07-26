@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="postular.css">
+</head>
+<body>
+  <div class="container">
+    <h1 class="form-title">Postulacion</h1>
+    <form id="postulacionForm">
+      <div class="main-user-info">
+        <div class="user-input-box">
+          <label for="fullName">Nombre </label>
+          <input type="text"
+                  id="fullName"
+                  name="fullName"
+                  placeholder="Ingrese el nombre del animal"/>
+        </div>
+        <div class="user-input-box">
+          <label for="username">Raza</label>
+          <input type="text"
+                  id="username"
+                  name="username"
+                  placeholder="Ingresar raza del animal"/>
+        </div>
+        
+        <div class="user-input-box">
+          <label for="phoneNumber">Descripcion</label>
+          <input type="text"
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  placeholder="Ingresar descripción del animal"/>
+        </div>
+        <div class="user-input-box">
+          <label for="password">Edad</label>
+          <input type="password"
+                  id="password"
+                  name="password"
+                  placeholder="Ingresar edad del animal"/>
+        </div>
+        
+      </div>
+      <div class="gender-details-box">
+        <span class="gender-title">Genero</span>
+        <div class="gender-category">
+          <input type="radio" name="gender" id="male" value="Macho">
+          <label for="male">Macho</label>
+          <input type="radio" name="gender" id="female" value="Hembra">
+          <label for="female">Hembra</label>
+        </div>
+      </div>
+      <div class="form-submit-btn">
+        <button type="button" onclick="enviarDatos()">Postular</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    function enviarDatos() {
+      var fullName = document.getElementById('fullName').value;
+      var username = document.getElementById('username').value;
+      var phoneNumber = document.getElementById('phoneNumber').value;
+      var password = document.getElementById('password').value;
+      var gender = document.querySelector('input[name="gender"]:checked').value;
+      var correo = localStorage.getItem('correo');
+
+      $.ajax({
+        url: 'registroMascotas.php',
+        type: 'POST',
+        data: {
+          fullName: fullName,
+          username: username,
+          phoneNumber: phoneNumber,
+          password: password,
+          gender: gender,
+          correo: correo
+        },
+        success: function(response) {
+          alert("Datos enviados a registroMascotas.php:\n\nNombre: " + correo + "\nRaza: " + username);
+          alert(response);
+          window.location.href = "index.html";
+        },
+        error: function(xhr, status, error) {
+          alert("Error al enviar los datos");
+          console.log(xhr.responseText);
+        }
+      });
+    }
+  </script>
+</body>
+</html>
